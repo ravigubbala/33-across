@@ -5,10 +5,19 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+/**
+ * Singleton class used to build expression for fetching desired results
+ * 
+ * @author ravi.kiran.gubbala
+ *
+ */
 public class QueryBuilder {
 
+	// columns selected for output
 	String[] selectedColumns;
+	// table quieried in the current expression
 	private Table table;
+	// conditons on which to filter results
 	HashMap<String, String> conditionMap = new HashMap<String, String>();
 
 	void put(String key, String value) {
@@ -80,7 +89,7 @@ public class QueryBuilder {
 	public void equalTo(Column column, String value) {
 		conditionMap.put(column.name, value);
 	}
-	
+
 	public void notIn(Column column, ArrayList<String> values) throws Exception {
 		getSingletonInstance().getTable().notIn(column.name, values);
 	}
@@ -106,7 +115,7 @@ class Column {
 	void equalTo(String value) {
 		QueryBuilder.getSingletonInstance().equalTo(this, value);
 	}
-	
+
 	public void notIn(String[] values) throws Exception {
 		QueryBuilder.getSingletonInstance().notIn(this, new ArrayList<String>(Arrays.asList(values)));
 	}

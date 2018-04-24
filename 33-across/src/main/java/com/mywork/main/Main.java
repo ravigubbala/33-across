@@ -6,9 +6,11 @@ import static com.mywork.main.QueryBuilder.select;
 public class Main {
 
 	public static void main(String[] args) {
+		//build a Table from ccds2.tsv file
 		Table tsv = FetchTable.from("ccds2.tsv", '\t');
 		tsv.setColumns(new String[] { "ID", "COUNTRY", "F1", "F2", "F3" });
 
+		//build a Table from ccds1.csv file
 		Table csv = FetchTable.from("ccds1.csv", ',');
 		csv.setColumns(new String[] { "ID", "UA" });
 

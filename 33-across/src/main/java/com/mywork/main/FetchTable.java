@@ -5,15 +5,27 @@ import java.io.InputStreamReader;
 
 import au.com.bytecode.opencsv.CSVReader;
 
+/**
+ * Utility class to build Table object from files
+ * @author ravi.kiran.gubbala
+ *
+ */
 public class FetchTable {
 
+	/**
+	 * Builds a Table object from given file using given delimiter
+	 * 
+	 * @param fileName
+	 * @param delim
+	 * @return
+	 */
 	static Table from(String fileName, char delim) {
 
 		Table table = new Table();
 
 		// Get file from resources folder
 		ClassLoader classLoader = new FetchTable().getClass().getClassLoader();
-//		File file = new File(classLoader.getResource(fileName).getFile());
+		// File file = new File(classLoader.getResource(fileName).getFile());
 		InputStream inputstream = classLoader.getResourceAsStream(fileName);
 		InputStreamReader inreader = new InputStreamReader(inputstream);
 

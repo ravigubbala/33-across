@@ -6,29 +6,58 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
+/**Object that holds data read from file
+ * @author ravi.kiran.gubbala
+ *
+ */
 public class Table {
 	String[] columns;
 	HashMap<Integer, Integer> widths;
 
+	/**
+	 * returns column names as a string array
+	 * 
+	 * @return
+	 */
 	public String[] getColumns() {
 		return columns;
 	}
 
-	// this method is used to specify schema of the file
+	/**
+	 * this method is used to specify schema of the file
+	 * 
+	 * @param columns
+	 */
 	public void setColumns(String[] columns) {
 		this.columns = columns;
 	}
 
+	// varaible to hold table data
 	ArrayList<String[]> data = new ArrayList<String[]>();
 
+	/**
+	 * Add input String array as new row into the table
+	 * 
+	 * @param row
+	 */
 	public void addRow(String[] row) {
 		data.add(row);
 	}
 
+	/**
+	 * get all rows in this table
+	 * 
+	 * @return
+	 */
 	public ArrayList<String[]> getRows() {
 		return data;
 	}
 
+	/**
+	 * returns a map with "column index-column width" values
+	 * 
+	 * @return
+	 */
 	HashMap<Integer, Integer> calcColumnWidths() {
 		HashMap<Integer, Integer> widths = new HashMap<Integer, Integer>();
 		// initializing widths map with column widths
@@ -45,17 +74,27 @@ public class Table {
 
 		return widths;
 	}
-	
-	// returns the index of given column in this table
-		public int getIndex(String column) throws Exception {
-			for (int i = 0; i < columns.length; i++) {
-				if (columns[i].equalsIgnoreCase(column))
-					return i;
-			}
-			throw new Exception("Unknown column :" + column);
-		}
 
-	// prints all the columns of this table to console
+	/**
+	 * returns the index of given column in this table
+	 * 
+	 * @param column
+	 * @return
+	 * @throws Exception
+	 */
+	public int getIndex(String column) throws Exception {
+		for (int i = 0; i < columns.length; i++) {
+			if (columns[i].equalsIgnoreCase(column))
+				return i;
+		}
+		throw new Exception("Unknown column :" + column);
+	}
+
+	/**
+	 * prints all the columns of this table to console
+	 * 
+	 * @throws Exception
+	 */
 	public void select() throws Exception {
 
 		if (widths.isEmpty()) {
@@ -79,7 +118,12 @@ public class Table {
 		}
 	}
 
-	// prints the given columns of this table to console
+	/**
+	 * prints the given columns of this table to console
+	 * 
+	 * @param selectedColumns
+	 * @throws Exception
+	 */
 	public void select(String... selectedColumns) throws Exception {
 		widths = calcColumnWidths();
 
@@ -98,9 +142,8 @@ public class Table {
 			System.out.println();
 			for (String[] row : getRows()) {
 				for (Integer col : indexLst) {
-					System.out.print(
-							String.format("%1$-" + ((widths.get(col) - columns[col].length()) > 0 ? (widths.get(col))
-									: columns[col].length()) + "s", row[col]) + "\t");
+					System.out.print(String.format("%1$-" + ((widths.get(col) - columns[col].length()) > 0
+							? (widths.get(col)) : columns[col].length()) + "s", row[col]) + "\t");
 				}
 				System.out.println();
 			}
@@ -110,12 +153,24 @@ public class Table {
 		}
 	}
 
-	//natural join the tables
+	/**
+	 * wrapper on crossMultiply method
+	 * 
+	 * @param table
+	 * @return
+	 */
 	public Table join(Table table) {
 		Table joinTable = crossMultiply(this, table);
 		return joinTable;
 	}
 
+	/**
+	 * calculates join of input two tables based on common columns
+	 * 
+	 * @param table1
+	 * @param table2
+	 * @return
+	 */
 	private Table crossMultiply(Table table1, Table table2) {
 		ArrayList<String> jtCols = new ArrayList<String>();
 		Table jt = new Table();
@@ -155,7 +210,13 @@ public class Table {
 		return jt;
 	}
 
-	//find common columns in both the tables
+	/**
+	 * find common columns in both the tables
+	 * 
+	 * @param table1
+	 * @param table2
+	 * @return
+	 */
 	private HashMap<String, Integer[]> commonColumns(Table table1, Table table2) {
 		HashMap<String, Integer[]> comCols = new HashMap<String, Integer[]>();
 		String[] tab1Cols = table1.getColumns();
@@ -172,11 +233,15 @@ public class Table {
 
 	}
 
-	public Table join(Table join, String column) {
-		// TODO
-		return null;
-	}
-
+	/**
+	 * filters out all rows with specified value in given column. similar to
+	 * "column1=value1" type conditons in sql where clause
+	 * 
+	 * @param column
+	 * @param value
+	 * @return
+	 * @throws Exception
+	 */
 	Table filterBy(String column, String value) throws Exception {
 		for (Iterator<String[]> iterator = data.iterator(); iterator.hasNext();) {
 			String[] row = iterator.next();
@@ -187,7 +252,16 @@ public class Table {
 
 		return this;
 	}
-	
+
+	/**
+	 * filters out all rows with specified list values in given column. similar
+	 * to "not in" expression in sql
+	 * 
+	 * @param column
+	 * @param values
+	 * @return
+	 * @throws Exception
+	 */
 	Table notIn(String column, ArrayList<String> values) throws Exception {
 		for (Iterator<String[]> iterator = data.iterator(); iterator.hasNext();) {
 			String[] row = iterator.next();
