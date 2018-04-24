@@ -1,7 +1,7 @@
 package com.mywork.main;
 
-import java.io.File;
-import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import au.com.bytecode.opencsv.CSVReader;
 
@@ -13,10 +13,12 @@ public class FetchTable {
 
 		// Get file from resources folder
 		ClassLoader classLoader = new FetchTable().getClass().getClassLoader();
-		File file = new File(classLoader.getResource(fileName).getFile());
+//		File file = new File(classLoader.getResource(fileName).getFile());
+		InputStream inputstream = classLoader.getResourceAsStream(fileName);
+		InputStreamReader inreader = new InputStreamReader(inputstream);
 
 		try {
-			CSVReader reader = new CSVReader(new FileReader(file), delim, '"', 1);
+			CSVReader reader = new CSVReader(inreader, delim, '"', 1);
 
 			// Read CSV line by line and use the string array as you want
 			String[] nextLine;
